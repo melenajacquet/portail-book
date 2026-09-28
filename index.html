@@ -1,0 +1,231 @@
+<!DOCTYPE html><html lang="fr"><head>  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>Portail - Book | Carrefour Proximité</title>  <style>    :root {      --primary-color: #004B30;      --primary-hover: #003622;      --accent-color: #028090;      --bg-color: #F8F9FA;      --card-bg: #FFFFFF;      --text-main: #1A1A1A;      --text-muted: #6C757D;      --border-color: #E9ECEF;      --danger-color: #D90429;      --radius: 12px;      --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);    }    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }    body { background-color: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }    header { background-color: var(--card-bg); border-bottom: 2px solid var(--border-color); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }    .brand { display: flex; align-items: center; gap: 12px; }    .brand-logo { width: 14px; height: 24px; background-color: var(--primary-color); border-radius: 2px; }    .brand-title { font-size: 1.25rem; font-weight: 700; color: var(--primary-color); letter-spacing: -0.5px; }    .admin-toggle { background: transparent; border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; font-size: 0.85rem; color: var(--text-muted); transition: all 0.2s; }    .admin-toggle:hover, .admin-toggle.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }    main { flex: 1; max-width: 1100px; width: 100%; margin: 0 auto; padding: 2.5rem 1.5rem; }    .page { display: none; animation: fadeIn 0.3s ease-in-out; }    .page.active { display: block; }    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }    .page-title { font-size: 2rem; color: var(--primary-color); text-align: center; margin-bottom: 0.5rem; font-weight: 800; }    .page-subtitle { text-align: center; color: var(--text-muted); margin-bottom: 2.5rem; font-size: 1.1rem; }    .button-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; max-width: 800px; margin: 0 auto; }    .big-btn { background: var(--card-bg); border: 2px solid var(--border-color); border-radius: var(--radius); padding: 2.5rem 2rem; text-align: center; cursor: pointer; transition: all 0.25s ease; box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }    .big-btn:hover { border-color: var(--primary-color); transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0, 75, 48, 0.12); }    .big-btn-title { font-size: 1.35rem; font-weight: 700; color: var(--primary-color); }    .big-btn-subtitle { font-size: 0.95rem; color: var(--text-muted); }    .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--text-muted); }    .breadcrumb-link { color: var(--primary-color); text-decoration: none; cursor: pointer; font-weight: 600; }    .breadcrumb-link:hover { text-decoration: underline; }    .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }    .search-container { margin-bottom: 1.5rem; }    .search-input { width: 100%; padding: 12px 16px; font-size: 1rem; border: 2px solid var(--border-color); border-radius: 8px; outline: none; transition: border-color 0.2s; }    .search-input:focus { border-color: var(--primary-color); }    .view-switch { display: flex; background: var(--border-color); padding: 4px; border-radius: 8px; }    .view-btn { border: none; background: transparent; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; color: var(--text-muted); transition: all 0.2s; }    .view-btn.active { background: var(--card-bg); color: var(--primary-color); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }    .add-book-btn { background: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: none; transition: background 0.2s; }    .add-book-btn:hover { background: var(--primary-hover); }    .books-container.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }    .books-container.list { display: flex; flex-direction: column; gap: 1rem; }    .book-card { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border-color); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s; position: relative; }    .book-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }    .book-cover { width: 100%; height: 180px; object-fit: cover; background-color: #EEE; }    .book-content { padding: 1.25rem; display: flex; flex-direction: column; flex: 1; }    .book-title { font-size: 1.15rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.5rem; }    .book-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.25rem; flex: 1; line-height: 1.4; }    .drive-link { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--primary-color); color: white; text-decoration: none; padding: 10px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; text-align: center; transition: background 0.2s; }    .drive-link:hover { background: var(--primary-hover); }    .books-container.list .book-card { flex-direction: row; align-items: center; height: 120px; }    .books-container.list .book-cover { width: 140px; height: 100%; }    .books-container.list .book-content { flex-direction: row; align-items: center; justify-content: space-between; width: 100%; gap: 1rem; }    .books-container.list .book-desc { margin-bottom: 0; max-width: 40%; }    .admin-actions { display: none; gap: 6px; position: absolute; top: 10px; right: 10px; }    .admin-mode .admin-actions { display: flex; }    .btn-action { background: rgba(255, 255, 255, 0.9); border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600; }    .btn-action.delete { color: var(--danger-color); }    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }    .modal-overlay.active { display: flex; }    .modal { background: var(--card-bg); padding: 2rem; border-radius: var(--radius); width: 100%; max-width: 550px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }    .modal-title { font-size: 1.4rem; color: var(--primary-color); margin-bottom: 1.5rem; }    .form-group { margin-bottom: 1.25rem; }    .form-group label { display: block; font-weight: 600; margin-bottom: 0.4rem; font-size: 0.9rem; }    .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.95rem; }    .checkbox-group { display: flex; flex-direction: column; gap: 8px; background: var(--bg-color); padding: 10px; border-radius: 6px; }    .checkbox-label { display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer; }    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 1.5rem; }    .btn-secondary { background: #E0E0E0; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: 600; }  </style></head><body>
+  <header>    <div class="brand"><div class="brand-logo"></div><div class="brand-title">Carrefour Proximité</div></div>    <button class="admin-toggle" id="adminToggleBtn" onclick="toggleAdminMode()">Accès Éditeur</button>  </header>  <main>    <section id="page1" class="page active">      <h1 class="page-title">Portail - Book</h1>      <p class="page-subtitle">Veuillez sélectionner votre entrepôt / secteur</p>            <div class="button-grid">        <button class="big-btn" onclick="selectSector('NORD')"><span class="big-btn-title">St-Vulbas, Bagé, Mâcon</span><span class="big-btn-subtitle">(Secteur Nord)</span></button>        <button class="big-btn" onclick="selectSector('SALON')"><span class="big-btn-title">Salon</span><span class="big-btn-subtitle">(Secteur Sud)</span></button>      </div>    </section>    <section id="page2" class="page">      <div class="breadcrumb"><span class="breadcrumb-link" onclick="goToPage(1)">← Portail - Book</span><span>/</span><span id="selectedSectorBreadcrumb"></span></div>            <h1 class="page-title">Format de Magasin</h1>      <p class="page-subtitle">Sélectionnez la typologie de votre point de vente</p>            <div class="button-grid">        <button class="big-btn" onclick="selectFormat('63')"><span class="big-btn-title">63 - Rural</span><span class="big-btn-subtitle">Contact - Express rural</span></button>        <button class="big-btn" onclick="selectFormat('70')"><span class="big-btn-title">70 - Urbain</span><span class="big-btn-subtitle">Express urbain - City - Montagne</span></button>      </div>    </section>    <section id="page3" class="page">      <div class="breadcrumb"><span class="breadcrumb-link" onclick="goToPage(1)">Portail</span><span>/</span><span class="breadcrumb-link" id="breadcrumbSector" onclick="goToPage(2)"></span><span>/</span><span id="breadcrumbFormat"></span></div>      <div class="results-header">        <div>          <h1 class="page-title" style="text-align: left; margin:0;">Books Produits</h1>          <p id="resultsSubtitle" style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;"></p>        </div>        <div style="display: flex; gap: 10px; align-items: center;">          <button class="add-book-btn" id="addBookBtn" onclick="openModal()">+ Ajouter un Book</button>          <div class="view-switch">            <button class="view-btn active" id="btnViewGrid" onclick="setViewMode('grid')">Vue Grille</button>            <button class="view-btn" id="btnViewList" onclick="setViewMode('list')">Vue Liste</button>          </div>        </div>      </div>      <div class="search-container">        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Rechercher un book par nom ou mot-clé..." oninput="renderBooks()">      </div>      <div id="booksContainer" class="books-container grid"></div>    </section>  </main>
+  <div class="modal-overlay" id="bookModal">    <div class="modal">      <h2 class="modal-title" id="modalTitle">Ajouter un Book</h2>      <form id="bookForm" onsubmit="handleFormSubmit(event)">        <input type="hidden" id="bookId">                <div class="form-group">          <label for="bookTitle">Titre du Book *</label>          <input type="text" id="bookTitle" required placeholder="ex: Book Merchandising Pâques">        </div>        <div class="form-group">          <label for="bookImage">Lien URL de la photo d'illustration *</label>          <input type="url" id="bookImage" required placeholder="https://..." onchange="previewImage(this.value)">          <small style="color: var(--text-muted); font-size: 0.8rem; display: block; margin-top: 4px;">Collez le lien direct vers votre image (Google Drive public, ImgBB, etc.)</small>          <img id="imagePreview" style="width: 100%; max-height: 150px; object-fit: cover; border-radius: 6px; margin-top: 10px; display: none;" alt="Aperçu">        </div>        <div class="form-group">          <label for="bookDrive">Lien Google Drive du document *</label>          <input type="url" id="bookDrive" required placeholder="https://drive.google.com/drive/folders/...">        </div>        <div class="form-group">          <label for="bookDesc">Description / Explication</label>          <textarea id="bookDesc" rows="3" placeholder="Informations importantes concernant ce book..."></textarea>        </div>        <div class="form-group">          <label>Assigner aux Secteurs (Entrepôts) *</label>          <div class="checkbox-group">            <label class="checkbox-label"><input type="checkbox" name="sector" value="NORD"> St-Vulbas, Bagé, Mâcon (Nord)</label>            <label class="checkbox-label"><input type="checkbox" name="sector" value="SALON"> Salon</label>          </div>        </div>        <div class="form-group">          <label>Assigner aux Formats *</label>          <div class="checkbox-group">            <label class="checkbox-label"><input type="checkbox" name="format" value="63"> 63 - Rural (Contact - Express rural)</label>            <label class="checkbox-label"><input type="checkbox" name="format" value="70"> 70 - Urbain (Express urbain - City - Montagne)</label>          </div>        </div>        <div class="modal-actions">          <button type="button" class="btn-secondary" onclick="closeModal()">Annuler</button>          <button type="submit" class="add-book-btn" id="saveSubmitBtn" style="display: block;">Enregistrer</button>        </div>      </form>    </div>  </div>
+  <script>
+    const BIN_ID = "6aaba34dffd5d16053111481";
+    const MASTER_KEY = "$2a$10$EM7lwWXqzkxXCzhd0HY0xeIHtaW0QXOdpDpyMeaZ4k6O95ixkU66y";
+    const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+    let state = { sector: null, format: null, isAdmin: false, viewMode: 'grid', books: [] };
+    const LABELS = { NORD: "St-Vulbas, Bagé, Mâcon (Nord)", SALON: "Salon", '63': "63 - Rural", '70': "70 - Urbain" };
+
+    function formatDriveImageUrl(url) {
+      if (!url) return '';
+      if (url.includes('drive.google.com') && url.includes('/file/d/')) {
+        const fileId = url.split('/file/d/')[1].split('/')[0];
+        return `https://lh3.googleusercontent.com/d/${fileId}`;
+      }
+      return url;
+    }
+
+    async function fetchBooks() {
+      try {
+        const response = await fetch(`${JSONBIN_URL}/latest`, {
+          headers: { "X-Master-Key": MASTER_KEY }
+        });
+        if (response.ok) {
+          const resData = await response.json();
+          state.books = Array.isArray(resData.record) ? resData.record : [];
+        }
+      } catch (err) {
+        console.error("Erreur de chargement :", err);
+      }
+      renderBooks();
+    }
+
+    async function saveBooksToCloud() {
+      try {
+        const response = await fetch(JSONBIN_URL, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Master-Key': MASTER_KEY
+          },
+          body: JSON.stringify(state.books)
+        });
+        if (!response.ok) throw new Error("Échec de la sauvegarde.");
+        return true;
+      } catch (err) {
+        alert("Erreur lors de la sauvegarde réseau. Vérifiez votre connexion.");
+        console.error(err);
+        return false;
+      }
+    }
+
+    function goToPage(pageNumber) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(`page${pageNumber}`).classList.add('active');
+    }
+
+    function selectSector(sectorKey) {
+      state.sector = sectorKey;
+      document.getElementById('selectedSectorBreadcrumb').textContent = LABELS[sectorKey];
+      goToPage(2);
+    }
+
+    function selectFormat(formatKey) {
+      state.format = formatKey;
+      document.getElementById('breadcrumbSector').textContent = LABELS[state.sector];
+      document.getElementById('breadcrumbFormat').textContent = LABELS[formatKey];
+      document.getElementById('resultsSubtitle').textContent = `${LABELS[state.sector]} | ${LABELS[state.format]}`;
+      document.getElementById('searchInput').value = '';
+      renderBooks();
+      goToPage(3);
+    }
+
+    function toggleAdminMode() {
+      if (!state.isAdmin) {
+        const pass = prompt("Saisissez le mot de passe Éditeur :");
+        if (pass === 'CMPGC') {
+          state.isAdmin = true;
+          document.getElementById('adminToggleBtn').textContent = "Quitter Mode Éditeur";
+          document.getElementById('adminToggleBtn').classList.add('active');
+          document.getElementById('addBookBtn').style.display = 'block';
+          document.body.classList.add('admin-mode');
+        } else if (pass !== null) {
+          alert("Mot de passe incorrect.");
+        }
+      } else {
+        state.isAdmin = false;
+        document.getElementById('adminToggleBtn').textContent = "Accès Éditeur";
+        document.getElementById('adminToggleBtn').classList.remove('active');
+        document.getElementById('addBookBtn').style.display = 'none';
+        document.body.classList.remove('admin-mode');
+      }
+      renderBooks();
+    }
+
+    function setViewMode(mode) {
+      state.viewMode = mode;
+      const container = document.getElementById('booksContainer');
+      document.getElementById('btnViewGrid').classList.toggle('active', mode === 'grid');
+      document.getElementById('btnViewList').classList.toggle('active', mode === 'list');
+      container.className = `books-container ${mode}`;
+    }
+
+    function renderBooks() {
+      const container = document.getElementById('booksContainer');
+      container.innerHTML = '';
+      const query = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
+
+      const filteredBooks = state.books.filter(book => {
+        const matchSector = book.sectors && book.sectors.includes(state.sector);
+        const matchFormat = book.formats && book.formats.includes(state.format);
+        const matchQuery = !query || 
+          (book.title && book.title.toLowerCase().includes(query)) || 
+          (book.description && book.description.toLowerCase().includes(query));
+        return matchSector && matchFormat && matchQuery;
+      });
+
+      filteredBooks.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+
+      if (filteredBooks.length === 0) {
+        container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 3rem;">${query ? 'Aucun book ne correspond à votre recherche.' : 'Aucun Book disponible pour cette sélection.'}</p>`;
+        return;
+      }
+
+      filteredBooks.forEach(book => {
+        const card = document.createElement('div');
+        card.className = 'book-card';
+        card.innerHTML = `
+          ${state.isAdmin ? `<div class="admin-actions"><button class="btn-action" onclick="editBook('${book.id}')">Éditer</button><button class="btn-action delete" onclick="deleteBook('${book.id}')">Supprimer</button></div>` : ''}
+          <img src="${formatDriveImageUrl(book.image)}" alt="${book.title}" class="book-cover" onerror="this.src='https://via.placeholder.com/600x400?text=Visuel+Indisponible'">
+          <div class="book-content">
+            <h3 class="book-title">${book.title}</h3>
+            <p class="book-desc">${book.description || 'Aucune description disponible.'}</p>
+            <a href="${book.drive}" target="_blank" rel="noopener noreferrer" class="drive-link">Accéder au book ↗</a>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function previewImage(url) {
+      const preview = document.getElementById('imagePreview');
+      if (url) {
+        preview.src = formatDriveImageUrl(url);
+        preview.style.display = 'block';
+      } else {
+        preview.style.display = 'none';
+      }
+    }
+
+    function openModal(editId = null) {
+      const modal = document.getElementById('bookModal');
+      document.getElementById('bookForm').reset();
+      document.getElementById('imagePreview').style.display = 'none';
+
+      if (editId) {
+        const book = state.books.find(b => b.id === editId);
+        if (book) {
+          document.getElementById('modalTitle').textContent = "Modifier le Book";
+          document.getElementById('bookId').value = book.id;
+          document.getElementById('bookTitle').value = book.title;
+          document.getElementById('bookImage').value = book.image;
+          document.getElementById('bookDrive').value = book.drive;
+          document.getElementById('bookDesc').value = book.description;
+          previewImage(book.image);
+          document.querySelectorAll('input[name="sector"]').forEach(cb => cb.checked = book.sectors.includes(cb.value));
+          document.querySelectorAll('input[name="format"]').forEach(cb => cb.checked = book.formats.includes(cb.value));
+        }
+      } else {
+        document.getElementById('modalTitle').textContent = "Ajouter un Book";
+        document.getElementById('bookId').value = '';
+        document.querySelectorAll('input[name="sector"]').forEach(cb => cb.checked = (cb.value === state.sector));
+        document.querySelectorAll('input[name="format"]').forEach(cb => cb.checked = (cb.value === state.format));
+      }
+      modal.classList.add('active');
+    }
+
+    function closeModal() { document.getElementById('bookModal').classList.remove('active'); }
+
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      const submitBtn = document.getElementById('saveSubmitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sauvegarde...";
+
+      const id = document.getElementById('bookId').value;
+      const title = document.getElementById('bookTitle').value;
+      const image = document.getElementById('bookImage').value;
+      const drive = document.getElementById('bookDrive').value;
+      const description = document.getElementById('bookDesc').value;
+      const sectors = Array.from(document.querySelectorAll('input[name="sector"]:checked')).map(cb => cb.value);
+      const formats = Array.from(document.querySelectorAll('input[name="format"]:checked')).map(cb => cb.value);
+
+      if (sectors.length === 0 || formats.length === 0) { 
+        submitBtn.disabled = false; 
+        submitBtn.textContent = "Enregistrer"; 
+        return alert("Sélectionnez au moins un secteur et un format."); 
+      }
+
+      if (id) {
+        const idx = state.books.findIndex(b => b.id === id);
+        if (idx !== -1) state.books[idx] = { id, title, image, drive, description, sectors, formats };
+      } else {
+        state.books.push({ id: Date.now().toString(), title, image, drive, description, sectors, formats });
+      }
+
+      const success = await saveBooksToCloud();
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Enregistrer";
+
+      if (success) {
+        renderBooks();
+        closeModal();
+      }
+    }
+
+    function editBook(id) { openModal(id); }
+
+    async function deleteBook(id) {
+      if (confirm("Voulez-vous vraiment supprimer ce book ?")) {
+        state.books = state.books.filter(b => b.id !== id);
+        const success = await saveBooksToCloud();
+        if (success) renderBooks();
+      }
+    }
+
+    fetchBooks();
+  </script>
+</body></html>
